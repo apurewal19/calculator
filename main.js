@@ -5,10 +5,13 @@ let operator = "";
 const numberButtons = document.querySelectorAll("[data-number]");
 const operatorButtons = document.querySelectorAll("[data-operator]");
 const clearButton = document.getElementById("clear-button");
-clearButton.addEventListener("click", clearCalculator);
+    clearButton.addEventListener("click", clearCalculator);
 const deleteButton = document.getElementById("delete-button");
 const percentButton = document.getElementById("percent-button");
 const pointButton = document.getElementById("point-button");
+    pointButton.addEventListener("click", () => {
+        addDecimal();
+    });
 const equalButton = document.getElementById("equal-button");
     equalButton.addEventListener("click", () => {
         if (currentNum != "" && previousNum != "") {
@@ -17,6 +20,8 @@ const equalButton = document.getElementById("equal-button");
     });
 const currentOutputScreen = document.querySelector("#current-output");
 const previousOutputScreen = document.querySelector("#previous-output");
+
+window.addEventListener("keydown", handleKeyPress)
 
 numberButtons.forEach(btn => {
     btn.addEventListener ("click", (e) => (
@@ -99,17 +104,39 @@ function displayResults() {
     currentNum = "";
 }
 
-function clearCalculator () {
+function clearCalculator() {
     currentNum = "";
     previousNum = "";
     operator = "";
-    currentOutputScreen.textContent = "";
+    currentOutputScreen.textContent = "0";
     previousOutputScreen.textContent = "";
 }
 
 function addDecimal() {
     if (!currentNum.includes('.')) {
-        currentNum += "."
+        currentNum += ".";
         currentOutputScreen.textContent = currentNum;
+    }
+}
+
+function handleKeyPress(e) {
+    e.preventDefault();
+    if (e.key >= 0 && e.key <= 9) {
+        handleNumber(e.key)
+    }
+    if (
+        e.key === "Enter" ||
+        (e.key === "=" && currentNum != "" && previousNum != "")
+    ) {
+        calculate();
+    }
+    if (e.key === "+" || e.key === "-" || e.key === "/") {
+        handleOperator(e.key);
+    }
+    if (e.key === "*") {
+        handleOperator("x");
+    }
+    if (e.key === ".") {
+        addDecimal();
     }
 }
