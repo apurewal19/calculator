@@ -5,11 +5,16 @@ let operator = "";
 const numberButtons = document.querySelectorAll("[data-number]");
 const operatorButtons = document.querySelectorAll("[data-operator]");
 const clearButton = document.getElementById("clear-button");
+clearButton.addEventListener("click", clearCalculator);
 const deleteButton = document.getElementById("delete-button");
 const percentButton = document.getElementById("percent-button");
 const pointButton = document.getElementById("point-button");
 const equalButton = document.getElementById("equal-button");
-    equalButton.addEventListener("click", calculate);
+    equalButton.addEventListener("click", () => {
+        if (currentNum != "" && previousNum != "") {
+            calculate();
+        }
+    });
 const currentOutputScreen = document.querySelector("#current-output");
 const previousOutputScreen = document.querySelector("#previous-output");
 
@@ -51,26 +56,35 @@ currentNum = Number(currentNum);
     } else if (operator === "x") {
         previousNum = previousNum * currentNum;
     } else if (operator === "/") {
+        if (currentNum <= 0) {
+            previousNum = "Error"
+            displayResults();
+            return;
+        }
         previousNum = previousNum / currentNum;
     }
-    previousOutputScreen.textContent = "";
-    currentOutputScreen.textContent = previousNum;
+    previousNum = previousNum.toString();
+    displayResults();
 }
 
-// function add(a,b) {
-//     return a + b;
-// }
+function roundNumber(num) {
+    return Math.round(num * 100000) / 100000;
+}
 
-// function subtract(a,b) {
-//     return a - b;
-// }
+function displayResults() {
+    previousOutputScreen.textContent = "";
+    operator = "";
+    if (previousNum.length <= 11) {
+        currentOutputScreen.textContent = previousNum;
+    } else {
+        currentOutputScreen.textContent = previousNum.slice(0,11) + "...";
+    }
+}
 
-// function multiply(a,b) {
-//     return a * b;
-// }
-
-// function divide(a,b) {
-//     return a / b;
-// }
-
-
+function clearCalculator () {
+    currentNum = "";
+    previousNum = "";
+    operator = "";
+    currentOutputScreen.textContent = "";
+    previousOutputScreen.textContent = "";
+}
