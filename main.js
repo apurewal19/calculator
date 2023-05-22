@@ -25,6 +25,10 @@ numberButtons.forEach(btn => {
 });
 
 function handleNumber(number) {
+    if (previousNum !== "" && currentNum !== "" && operator === "") {
+        previousNum = ""
+        currentOutputScreen.textContent = currentNum;
+    }
     if (currentNum.length <= 11) {
         currentNum += number;
         currentOutputScreen.textContent = currentNum;
@@ -38,11 +42,24 @@ operatorButtons.forEach(btn => {
 });
 
 function handleOperator(op) {
-    operator = op;
-    previousNum = currentNum;
+    if (previousNum === "") {
+        previousNum = currentNum;
+        operatorCheck(op);
+    } else if (currentNum === "") {
+        operatorCheck(op);
+    } else {
+        calculate()
+        operator = op;
+        previousOutputScreen.textContent = previousNum + " " + operator;
+        currentOutputScreen.textContent = "0";
+    }
+}
+
+function operatorCheck(text) {
+    operator = text;
     previousOutputScreen.textContent = previousNum + " " + operator;
+    currentOutputScreen.textContent = "0";
     currentNum = "";
-    currentOutputScreen.textContent = "";
 }
 
 function calculate() {
@@ -72,13 +89,14 @@ function roundNumber(num) {
 }
 
 function displayResults() {
-    previousOutputScreen.textContent = "";
-    operator = "";
     if (previousNum.length <= 11) {
         currentOutputScreen.textContent = previousNum;
     } else {
         currentOutputScreen.textContent = previousNum.slice(0,11) + "...";
     }
+    previousOutputScreen.textContent = "";
+    operator = "";
+    currentNum = "";
 }
 
 function clearCalculator () {
@@ -87,4 +105,11 @@ function clearCalculator () {
     operator = "";
     currentOutputScreen.textContent = "";
     previousOutputScreen.textContent = "";
+}
+
+function addDecimal() {
+    if (!currentNum.includes('.')) {
+        currentNum += "."
+        currentOutputScreen.textContent = currentNum;
+    }
 }
