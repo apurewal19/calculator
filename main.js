@@ -4,22 +4,31 @@ let operator = "";
 
 const numberButtons = document.querySelectorAll("[data-number]");
 const operatorButtons = document.querySelectorAll("[data-operator]");
-const clearButton = document.getElementById("clear-button");
-    clearButton.addEventListener("click", clearCalculator);
-const deleteButton = document.getElementById("delete-button");
 const percentButton = document.getElementById("percent-button");
+const currentOutputScreen = document.querySelector("#current-output");
+const previousOutputScreen = document.querySelector("#previous-output");
+
+const clearButton = document.getElementById("clear-button");
+    clearButton.addEventListener("click", () => {
+        clearCalculator();
+    });
+
+const deleteButton = document.getElementById("delete-button");
+    deleteButton.addEventListener("click", () => {
+        deleteNumber();
+    });
+
 const pointButton = document.getElementById("point-button");
     pointButton.addEventListener("click", () => {
         addDecimal();
     });
+    
 const equalButton = document.getElementById("equal-button");
     equalButton.addEventListener("click", () => {
         if (currentNum != "" && previousNum != "") {
             calculate();
         }
     });
-const currentOutputScreen = document.querySelector("#current-output");
-const previousOutputScreen = document.querySelector("#previous-output");
 
 window.addEventListener("keydown", handleKeyPress)
 
@@ -68,8 +77,8 @@ function operatorCheck(text) {
 }
 
 function calculate() {
-previousNum = Number(previousNum);
-currentNum = Number(currentNum);
+    previousNum = Number(previousNum);
+    currentNum = Number(currentNum);
 
     if (operator === "+") {
         previousNum = previousNum + currentNum;
@@ -117,6 +126,12 @@ function addDecimal() {
         currentNum += ".";
         currentOutputScreen.textContent = currentNum;
     }
+}
+
+function deleteNumber() {
+    currentOutputScreen.textContent = currentOutputScreen.textContent
+        .toString()
+        .slice(0, -1)
 }
 
 function handleKeyPress(e) {
